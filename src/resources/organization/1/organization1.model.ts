@@ -47,7 +47,8 @@ export default class Organization1 implements Model {
             if (this.status) {
                 query.where('org1.status', this.status);
             }
-            const data: Organization1 | undefined = await query.first();
+
+            const data: Organization1 | undefined = await query.first(); 
             
             if (data) {
                 let org = new Organization1();

@@ -12,6 +12,17 @@ class Organization1Service {
             throw e;
         }
     }
+    
+    public static async detail(uuid: string): Promise<Organization1|undefined> {
+        try {
+            let org = new Organization1();
+            
+            org.uuid = uuid;
+            return await org.find();
+        } catch (e) {
+            throw e;
+        }
+    }
 
     /** 
      * create a new post

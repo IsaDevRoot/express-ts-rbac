@@ -29,6 +29,12 @@ class Organization1Controller implements Controller {
             this.create
         );
 
+        this.router.get(
+            `${this.path}/:uuid`, 
+            validationMiddleware(validate.params, 'params'), 
+            this.detail
+        );
+        
         this.router.patch(
             `${this.path}/:uuid`, 
             validationMiddleware(validate.params, 'params'), 
@@ -54,6 +60,19 @@ class Organization1Controller implements Controller {
             });
 
             return response.ok(datas, res);
+        } catch (e: any) {
+            console.error(e);
+            next(new HttpException(500, e.message));
+        }
+    } 
+    
+    private async detail(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+        try {
+            const {uuid} = req.params;
+            
+            const data = await service.detail(String(uuid));
+
+            return response.ok(data ?? {}, res);
         } catch (e: any) {
             console.error(e);
             next(new HttpException(500, e.message));
