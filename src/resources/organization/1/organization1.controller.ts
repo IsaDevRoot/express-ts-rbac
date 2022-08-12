@@ -62,7 +62,10 @@ class Organization1Controller implements Controller {
             return response.ok(datas, res);
         } catch (e: any) {
             console.error(e);
-            next(new HttpException(500, e.message));
+            if (e.status) {
+                return next(new HttpException(e.status, e.message));
+            }
+            return next(new HttpException(500, e.message));
         }
     } 
     
@@ -75,7 +78,10 @@ class Organization1Controller implements Controller {
             return response.ok(data ?? {}, res);
         } catch (e: any) {
             console.error(e);
-            next(new HttpException(500, e.message));
+            if (e.status) {
+                return next(new HttpException(e.status, e.message));
+            }
+            return next(new HttpException(500, e.message));
         }
     } 
     
@@ -101,20 +107,25 @@ class Organization1Controller implements Controller {
            return response.notFound({uuid}, res);
         } catch (e: any) {
             console.error(e);
-            next(new HttpException(500, e.message));
+            if (e.status) {
+                return next(new HttpException(e.status, e.message));
+            }
+            return next(new HttpException(500, e.message));
         }
     }
     
     private async delete(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
             const {uuid} = req.params;
-            if((await service.delete(uuid))) {
-                return response.ok({uuid}, res);
-            }
-            return response.notFound({uuid}, res);
+            await service.delete(uuid)
+            
+            return response.ok({uuid}, res);
         } catch (e: any) {
             console.error(e);
-            next(new HttpException(500, e.message));
+            if (e.status) {
+                return next(new HttpException(e.status, e.message));
+            }
+            return next(new HttpException(500, e.message));
         }
     }
 }

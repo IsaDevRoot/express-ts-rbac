@@ -1,4 +1,5 @@
 import Organization1 from '@/resources/organization/1/organization1.model';
+import HttpException from '@/utils/exceptions/http.exception';
 
 class Organization1Service {
     public static async index(query: {name?: string|undefined, sname?: string|undefined, status: string}): Promise<Array<Organization1>> {
@@ -18,7 +19,12 @@ class Organization1Service {
             let org = new Organization1();
             
             org.uuid = uuid;
-            return await org.find();
+            const data = await org.find();
+            if (data) {
+                return data;
+            }
+
+            throw new HttpException(404, '');
         } catch (e) {
             throw e;
         }
@@ -49,7 +55,7 @@ class Organization1Service {
                 await org.update(uuid);
                 return org;
             }
-            return undefined;
+            throw new HttpException(404, '');
         } catch (e) {
             throw e;
         }
@@ -68,7 +74,7 @@ class Organization1Service {
                 await org.update(uuid);
                 return org;
             } else {
-                return undefined;
+                throw new HttpException(404, '');
             }
 
             // await Organization1.delete(uuid);
