@@ -6,8 +6,8 @@ const body = Joi.object({
 });
 
 const query = Joi.object({
-    name: Joi.string(),
-    sname: Joi.string(),
+    name: Joi.string().min(0),
+    sname: Joi.string().min(0),
     status: Joi.string().allow('A', 'D', 'P').required()
 });
 
