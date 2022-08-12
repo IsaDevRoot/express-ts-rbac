@@ -5,7 +5,6 @@ import validationMiddleware from '@/middleware/validation.middleware';
 import validate from '@/resources/organization/1/organization1.validation';
 import service from '@/resources/organization/1/organization1.service';
 import response from '@/helpers/response.helper';
-import { string } from 'joi';
 
 class Organization1Controller implements Controller {
     public path = '/organizations/1';
@@ -77,9 +76,10 @@ class Organization1Controller implements Controller {
         try {
             const {uuid} = req.params;
             const {name, sname} = req.body;
-            await service.update(uuid, name, sname);
-
-            return response.ok({}, res);
+           if ((await service.update(uuid, name, sname))) {
+               return response.ok({uuid}, res);
+           }
+           return response.notFound({uuid}, res);
         } catch (e: any) {
             console.error(e);
             next(new HttpException(500, e.message));
@@ -89,9 +89,10 @@ class Organization1Controller implements Controller {
     private async delete(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
             const {uuid} = req.params;
-            await service.delete(uuid);
-
-            return response.ok({}, res);
+            if((await service.delete(uuid))) {
+                return response.ok({uuid}, res);
+            }
+            return response.notFound({uuid}, res);
         } catch (e: any) {
             console.error(e);
             next(new HttpException(500, e.message));

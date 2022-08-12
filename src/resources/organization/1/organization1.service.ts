@@ -1,10 +1,13 @@
-import Organization1Model from '@/resources/organization/1/organization1.model';
-// import Organization1 from '@/resources/post/post.interface';
+import Organization1 from '@/resources/organization/1/organization1.model';
 
 class Organization1Service {
-    public static async index(query: {name?: string|undefined, sname?: string|undefined, status: string}): Promise<Array<{uuid: string, name: string, sname: string}>> {
+    public static async index(query: {name?: string|undefined, sname?: string|undefined, status: string}): Promise<Array<Organization1>> {
         try {
-            return await Organization1Model.get(query);
+            let org = new Organization1();
+            org.name = query.name;
+            org.sname = query.sname;
+            org.status = query.status;
+            return await org.search();
         } catch (e) {
             throw e;
         }
@@ -15,29 +18,49 @@ class Organization1Service {
      */ 
     public static async create(name: string, sname: string): Promise<void> {
         try {
-            await Organization1Model.create({
-                name: name,
-                sname: sname
-            });
+            let org = new Organization1();
+            org.name = name;
+            org.sname = sname;
+            await org.create();
         } catch (e) {
             throw e;
         }
     }
 
-    public static async update(uuid: string, name: string, sname: string): Promise<void> {
+    public static async update(uuid: string, name: string, sname: string): Promise<Organization1|undefined> {
         try {
-            await Organization1Model.update(uuid, {
-                name: name,
-                sname: sname
-            });
+            let org: Organization1| undefined = new Organization1();
+            org.uuid = uuid;
+            org = await org.find();
+            if (org) {
+                org.name = name;
+                org.sname = sname;
+                await org.update(uuid);
+                return org;
+            }
+            return undefined;
         } catch (e) {
             throw e;
         }
     }
     
-    public static async delete(uuid: string): Promise<void> {
+    public static async delete(uuid: string): Promise<Organization1 | undefined> {
         try {
-            await Organization1Model.delete(uuid);
+            let org = new Organization1();
+            org.uuid = uuid;
+            const data = await org.find();
+
+            console.log(data);
+            
+            if (data) {
+                org.status = 'D';
+                await org.update(uuid);
+                return org;
+            } else {
+                return undefined;
+            }
+
+            // await Organization1.delete(uuid);
         } catch (e) {
             throw e;
         }
