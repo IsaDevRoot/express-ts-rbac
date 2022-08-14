@@ -24,7 +24,8 @@ class Organization1Service {
                 return data;
             }
 
-            throw new HttpException(404, '');
+            throw new HttpException(HttpException.notFound);
+            // throw new HttpException(404, `Data ${uuid} not found`);
         } catch (e) {
             throw e;
         }
@@ -55,7 +56,7 @@ class Organization1Service {
                 await org.update(uuid);
                 return org;
             }
-            throw new HttpException(404, '');
+            throw new HttpException(HttpException.notFound);
         } catch (e) {
             throw e;
         }
@@ -74,7 +75,7 @@ class Organization1Service {
                 await org.update(uuid);
                 return org;
             } else {
-                throw new HttpException(404, '');
+                throw new HttpException(HttpException.notFound);
             }
 
             // await Organization1.delete(uuid);

@@ -4,15 +4,10 @@ import response from '@/helpers/response.helper';
 
 function errorMiddleware(error: HttpException, req: Request, res: Response, next: NextFunction): void | Response {
     const status = error.status;
-    const message = error.message === '' ? undefined : error.message;
+    const message = error.message;
     console.log({status, message});
-    
 
-    if (status === 404) {
-        return response.notFound({}, res);
-    }
-
-    return response.error({}, res, message);
+    return response.error(status, {}, res, message);
 
 }
 

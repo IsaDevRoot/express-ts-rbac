@@ -62,10 +62,7 @@ class Organization1Controller implements Controller {
             return response.ok(datas, res);
         } catch (e: any) {
             console.error(e);
-            if (e.status) {
-                return next(new HttpException(e.status, e.message));
-            }
-            return next(new HttpException(500, e.message));
+            return next(new HttpException(e.status || 500, e.message));
         }
     } 
     
@@ -78,10 +75,7 @@ class Organization1Controller implements Controller {
             return response.ok(data ?? {}, res);
         } catch (e: any) {
             console.error(e);
-            if (e.status) {
-                return next(new HttpException(e.status, e.message));
-            }
-            return next(new HttpException(500, e.message));
+            return next(new HttpException(e.status || HttpException.error, e.message));
         }
     } 
     
@@ -93,7 +87,7 @@ class Organization1Controller implements Controller {
             return response.created({}, res);
         } catch (e: any) {
             console.error(e);
-            next(new HttpException(500, e.message));
+            return next(new HttpException(e.status || HttpException.error, e.message));
         }
     }
     
@@ -101,16 +95,13 @@ class Organization1Controller implements Controller {
         try {
             const {uuid} = req.params;
             const {name, sname} = req.body;
-           if ((await service.update(uuid, name, sname))) {
-               return response.ok({uuid}, res);
-           }
-           return response.notFound({uuid}, res);
+
+            await service.update(uuid, name, sname);
+
+            return response.ok({uuid}, res);
         } catch (e: any) {
             console.error(e);
-            if (e.status) {
-                return next(new HttpException(e.status, e.message));
-            }
-            return next(new HttpException(500, e.message));
+            return next(new HttpException(e.status || HttpException.error, e.message));
         }
     }
     
@@ -122,10 +113,7 @@ class Organization1Controller implements Controller {
             return response.ok({uuid}, res);
         } catch (e: any) {
             console.error(e);
-            if (e.status) {
-                return next(new HttpException(e.status, e.message));
-            }
-            return next(new HttpException(500, e.message));
+            return next(new HttpException(e.status || HttpException.error, e.message));
         }
     }
 }

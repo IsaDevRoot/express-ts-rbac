@@ -30,22 +30,12 @@ export default {
         }
         return res.status(status_code).json(data)
     },
-    notFound: (values: Array<object> | string | object, res: Response, message = "Ops... Not Found") => {
-        let status_code = 404
+    error: (code: number, values: Array<object> | string | object, res: Response, message: string) => {
         let data = {
-            "code": status_code,
-            "message": message,
-            "result": values,
-        }
-        return res.status(status_code).json(data)
-    },
-    error: (values: Array<object> | string | object, res: Response, message = "Ops... Internal server error, please contact support") => {
-        let status_code = 500
-        let data = {
-            "code": status_code,
+            "code": code,
             "message": message,
             "result": values
         }
-        return res.status(status_code).json(data)
+        return res.status(code).json(data)
     },
 }
